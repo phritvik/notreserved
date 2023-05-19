@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -169,7 +168,7 @@
                 const url = 'https://j8ktw17w76.execute-api.us-east-1.amazonaws.com/dev';
 
                 const dataToPush = {
-                    id: "user2105/18/2023",
+                    id: username+"05/18/2023",
                     username: username,
                     date: "05/18/2023",
                     country: "United States",
@@ -180,6 +179,7 @@
                 };
 
                 fetch(url, {
+                  mode: "no-cors",
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
