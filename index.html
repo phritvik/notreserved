@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Reserve Desk</title>
@@ -9,6 +10,7 @@
             font-family: 'Segoe UI', sans-serif;
             background-color: #F5F5F5;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -30,6 +32,7 @@
             border: none;
             margin-top: 20px;
             cursor: pointer;
+            width: 100%;
         }
 
         /* Styles for the alert */
@@ -41,23 +44,136 @@
             margin-top: 20px;
             text-align: center;
         }
+
+        /* Styles for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .modal-button {
+            font-size: 16px;
+            font-weight: 500;
+            color: #FFFFFF;
+            background-color: #007BFF;
+            border-radius: 5px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #999999;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>This desk is not reserved.</h1>
-        <button onclick="reserveDesk()">Reserve Desk</button>
+        <button onclick="showModal()">Reserve Desk</button>
         <div id="alert" class="alert" style="display:none;">
             <strong>Success!</strong> Desk reserved.
         </div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="hideModal()">&times;</span>
+                <input id="username-input" class="modal-input" type="text" placeholder="Enter your username" />
+                <button onclick="reserveDesk()" class="modal-button">Reserve</button>
+            </div>
+        </div>
     </div>
     <script>
-        function reserveDesk() {
-            // Here you can add your code to reserve the desk
-            // Once the reservation is successful, show the alert
-            var alertDiv = document.getElementById("alert");
-            alertDiv.style.display = "block";
+        function showModal() {
+            var modal = document.getElementById("modal");
+            modal.style.display = "flex";
         }
+
+        function hideModal() {
+            var modal = document.getElementById("modal");
+            modal.style.display = "none";
+        }
+
+        function reserveDesk() {
+            var usernameInput = document.getElementById("username-input");
+            var username = usernameInput.value;
+
+            if (username) {
+                const url = 'https://j8ktw17w76.execute-api.us-east-1.amazonaws.com/dev';
+
+                const dataToPush = {
+                    id: "user2105/18/2023",
+                    username: username,
+                    date: "05/18/2023",
+                    country: "United States",
+                    building: "WAS26",
+                    floor: 7,
+                    desk: "07.258",
+                    checkedIn: false
+                };
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToPush)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
+                var alertDiv = document.getElementById("alert");
+                alertDiv.style.display = "block";
+                hideModal();
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById("modal");
+            modal.style.display = "none";
+        });
     </script>
 </body>
+
 </html>
